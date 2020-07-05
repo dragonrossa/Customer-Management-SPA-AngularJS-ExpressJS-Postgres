@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="sidebar.css">
+    <title>Insert new user</title>
+    <script src="indexController.js"></script>
+    <style>
+        div.main2 {
+            display: none;
+        }
+    </style>
+
+</head>
+
+<body>
+
+
+
+    <div class="main" ng-app="myApp" ng-controller="formCtrl4">
+
+    
+         <div class="sidenav"></div>
+
+        <form ng-submit="submit()" name="userForm">
+
+            <h1>Change details</h1>
+            <span> Name:
+                <input type="text" ng-model="name" name="name" placeholder={{name}}></span>
+            <br>
+            <span>
+                Initials:
+                <input type="text" ng-model="initials" name="initials" placeholder={{initials}}>
+            </span>
+            <br>
+            <span>
+                Eye color:
+                <input type="text" ng-model="eyeColor" name="eyeColor" placeholder={{eyeColor}}>
+            </span>
+            <br>
+            <span>
+                Age:
+                <input type="text" ng-model="age" name="age" placeholder={{age}}>
+            </span>
+            <br>
+            <span></span>
+            Guid:
+            <input type="text" ng-model="guid" name="guid" placeholder={{guid}}>
+            </span><br>
+            <span>
+                Email:
+                <input type="text" ng-model="email" name="email" placeholder={{email}}>
+            </span>
+            <br>
+            <input type="submit" id="submit" value="Change" ng-style="Submit" />
+
+           <!-- {{testID}} -->
+
+         </form> 
+
+
+    </div>
+
+
+</body>
+
+</html>

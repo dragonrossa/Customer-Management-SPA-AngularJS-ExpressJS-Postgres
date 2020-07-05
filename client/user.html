@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="sidebar.css">
+    <title>List user</title>
+    <style>
+        div.main2 {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="main" ng-app="myApp" ng-controller="User" ng-style="myStyle">
+
+        <h1>List of users</h1>
+
+        <p ng-style="myStyle2">User details</p>
+        <table>
+            <tr ng-repeat="id in listID">
+                <td>{{id}}</td>
+            </tr>
+        </table>
+
+
+
+
+    </div>
+
+
+</body>
+
+</html>

@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>List of mobile phones</title>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+
+</head>
+
+<body ng-app="Iphone">
+    <div class="show-scope-demo" ng-style="myBody">
+        <div ng-controller="IphoneList">
+            <h1 ng-style="myStyle2">List of mobile phones</h1>
+            <h3>Description:</h3>
+            <p>Id: {{id}} </p>
+            <p>Name: {{name}} </p>
+            <p>Released: {{released}} </p>
+            <p>Weight: {{weight}} </p>
+            <p>Thickness: {{thickness}} </p>
+            <p> Guid: {{guid}} </p>
+            <p>OS: {{os}} </p>
+            <p>Storage: {{storage}} </p>
+            <p>Size: {{size}} </p>
+            <p>Camera: {{camera}} </p>
+            <p>Memory: {{memory}} </p>
+            <p>Battery: {{battery}} </p>
+            <br>
+
+        </div>
+        <div ng-controller="NetworkController">
+            <h3>Technology:</h3>
+            <p ng-repeat="name in technology">{{name}}</p>
+            <p ng-style="myStyle">2G bands:</p>
+            <p ng-repeat="name in TwoG_bands">{{name}}</p>
+            <p ng-style="myStyle">3G bands:</p>
+            <p ng-repeat="name in ThreeG_bands">{{name}}</p>
+            <p ng-style="myStyle">4G bands:</p>
+            <p ng-repeat="name in FourG_bands">{{name}}</p>
+            <p ng-style="myStyle">Speed:</p>
+            <p ng-repeat="name in Speed">{{name}}</p>
+            <br>
+
+        </div>
+
+        <div ng-controller="IphoneList">
+            <h3>Launch:</h3>
+            <p>Released: {{released}}</p>
+            <p>Status: {{status}}</p>
+            <br>
+        </div>
+
+        <div ng-controller="BodyController">
+            <h3>Dimension:</h3>
+            <p ng-repeat="name in dimension">{{name}}</p>
+            <p ng-style="myStyle">Weight:</p>
+            <p ng-repeat="name in weight">{{name}}</p>
+            <p ng-style="myStyle">Build:</p>
+            <p ng-repeat="name in build">{{name}}</p>
+            <p ng-style="myStyle">SIM:</p>
+            <p ng-repeat="name in SIM">{{name}}</p>
+            <br>
+        </div>
+
+        <div ng-controller="DisplayController">
+            <h3>Display:</h3>
+            <p ng-style="myStyle">Type:</p>
+            <p ng-repeat="name in type">{{name}}</p>
+            <p ng-style="myStyle">Size:</p>
+            <p ng-repeat="name in size">{{name}}</p>
+            <p ng-style="myStyle">Resolution:</p>
+            <p ng-repeat="name in resolution">{{name}}</p>
+            <p ng-style="myStyle">Protection:</p>
+            <p ng-repeat="name in protection">{{name}}</p>
+            <br>
+        </div>
+
+        <div ng-controller="IphoneList">
+            <h3>Platform:</h3>
+            <p>OS: {{OS}}</p>
+            <p>Chipset: {{Chipset}}</p>
+            <p>CPU: {{CPU}}</p>
+            <p>GPU: {{GPU}}</p>
+            <p>Memory:</p>
+            <p>Card_slot: {{card_slot}}</p>
+            <p>Internal: {{internal}}</p>
+<br>
+        </div>
+
+        <div ng-controller="MainCameraController">
+            <h3>Main camera:</h3>
+            <p ng-style="myStyle">Triple:</p>
+            <p ng-repeat="name in triple">{{name}}</p>
+            <p ng-style="myStyle">Features:</p>
+            <p ng-repeat="name in features">{{name}}</p>
+            <p ng-style="myStyle">Video:</p>
+            <p ng-repeat="name in video">{{name}}</p>
+            <br>
+        </div>
+
+        <div ng-controller="SelfieCameraController">
+            <h3>Selfie camera:</h3>
+            <p ng-style="myStyle">Dual: </p>
+            <p ng-repeat="name in dual">{{name}}</p>
+            <p ng-style="myStyle">Features: </p>
+            <p ng-repeat="name in features">{{name}}</p>
+            <p ng-style="myStyle">Video: </p>
+            <p ng-repeat="name in video">{{name}}</p>
+            <br>
+        </div>
+
+        <div ng-controller="IphoneList">
+            <h3>Sound:</h3>
+            <p>Loudspeaker: {{loudspeaker}}</p>
+            <p>Jack 3.5mm: {{jack_3_5mm}}</p>
+            <p ng-style="myStyle">Comms: </p>
+            <p>WLAN: {{WLAN}}</p>
+            <p>Bluetooth: {{bluetooth}}</p>
+            <p>GPS: {{GPS}}</p>
+            <p>NFC: {{NFC}}</p>
+            <p>Radio: {{Radio}}</p>
+            <p>USB: {{USB}}</p>
+            <br>
+
+        </div>
+
+        <div ng-controller="FeaturesController">
+            <h3>Features:</h3>
+            <p ng-style="myStyle">Sensors:</p>
+            <p ng-repeat="name in sensors">{{name}}</p>
+            <br>
+
+        </div>
+
+        <div ng-controller="BatteryController">
+            <h3>Battery:</h3>
+            <p ng-style="myStyle">Title: </p>
+            <p ng-repeat="name in title">{{name}}</p>
+            <p ng-style="myStyle">Charging: </p>
+            <p ng-repeat="name in charging">{{name}}</p>
+            <p ng-style="myStyle">Talk time: </p>
+            <p ng-repeat="name in talk_time">{{name}}</p>
+            <p ng-style="myStyle">Music play: </p>
+            <p ng-repeat="name in music_play">{{name}}</p>
+            <br>
+
+        </div>
+
+        <div ng-controller="IphoneList">
+            <h3>Misc:</h3>
+            <p>Colors: {{colors}}</p>
+            <p>Models: {{models}}</p>
+            <p>SAR: {{SAR}}</p>
+            <p>SAR_EU: {{SAR_EU}}</p>
+            <p>Price: {{Price}}</p>
+            <br>
+        </div>
+
+        <div ng-controller="TestsController">
+            <h3>Tests:</h3>
+            <p ng-style="myStyle">Performance: </p>
+            <p ng-repeat="name in performance">{{name}}</p>
+            <p ng-style="myStyle">Display: </p>
+            <p ng-repeat="name in display">{{name}}</p>
+            <p ng-style="myStyle">Camera: </p>
+            <p ng-repeat="name in camera">{{name}}</p>
+            <p ng-style="myStyle">Loudspeaker: </p>
+            <p ng-repeat="name in loudspeaker">{{name}}</p>
+            <p ng-style="myStyle">Audio quality: </p>
+            <p ng-repeat="name in audio_quality">{{name}}</p>
+            <p ng-style="myStyle">Battery life: </p>
+            <p ng-repeat="name in battery_life">{{name}}</p>
+            <br>
+
+        </div>
+
+
+    </div>
+    <script src="iphoneController.js"></script>
+</body>
+
+</html>

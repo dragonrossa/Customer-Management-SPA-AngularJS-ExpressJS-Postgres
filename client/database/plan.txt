@@ -1,0 +1,10 @@
+Users info
+**********
+First name
+Last name
+Email
+Department
+Groups
+Username
+Password
+*********

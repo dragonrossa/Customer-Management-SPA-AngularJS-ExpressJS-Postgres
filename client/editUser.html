@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="sidebar.css">
+    <title>Insert new user</title>
+    <style>
+        div.main2 {
+            display: none;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div class="main" ng-app="myApp" ng-controller="formCtrl3">
+        <h1>Edit users settings</h1>
+
+
+
+        <table>
+            <tr>
+                <td ng-style="myStyle">Edit user settings:</th>
+                  
+
+            </tr>
+            
+
+            <table ng-init="listID; userName">
+                <tr ng-repeat="id in listID track by $index">
+                  <td>{{ id }}  {{ userName[$index] }} </td>
+                  <td> &nbsp; <a href="#!userDetail/{{id}}" ng-click="myFunc()" ng-model="id" name="id">Edit</a></td>
+                </tr>
+              </table>
+           
+
+
+
+    </div>
+
+
+
+</body>
+
+</html>

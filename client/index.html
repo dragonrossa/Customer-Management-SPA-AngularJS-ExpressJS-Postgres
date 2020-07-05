@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+    <head>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-route.js"></script>
+<link rel="stylesheet" type="text/css" href="sidebar.css">
+
+</head>
+
+<body ng-app="myApp" ng-style="myStyle">
+
+
+    <div ng-controller="showhidectrl">
+
+        <div ng-view>
+        </div>
+
+
+        <div class="sidenav" ng-controller="showhidectrl">
+            <h1>Navigation</h1>
+            <a href="#!main" ng-click="isShowHide('hide')">About</a>
+            <a href="#!user" ng-click="isShowHide('hide')">Users list</a>
+            <a href="#!usersForm" ng-click="isShowHide('hide')">New user</a>
+            <!-- <a href="#!usersView" ng-click="isShowHide('hide')">View new user</a> -->
+            <a href="#!editUser" ng-click="isShowHide('hide')">Edit user</a>
+            <a href="#!deleteUser" ng-click="isShowHide('hide')">Delete user</a>
+            <img ng-src="./img/girl.png" class="picture"></img>
+        </div>
+
+    
+
+    <div class="main2">
+            <h1 class="hidden">Users SPA</h1>
+            <p><b>Functions:</b></p>
+            <p>Create new Users.</p>
+            <p>Update new Users.</p>
+            <p>Delete new Users.</p>
+            <p>List all the Users.</p>
+            <p>Enjoy.</p>
+
+            <img ng-src="./img/pencil.png" class="pencil"></img>
+       
+    </div>
+
+</div>
+
+
+
+    <script src="indexController.js"></script>
+</body>
+
+</html>
