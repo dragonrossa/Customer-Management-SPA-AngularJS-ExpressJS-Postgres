@@ -111,12 +111,36 @@ async function User() {
     return data2.rows
 }
 
+async function userCount() {
+    var data3 = await pool.query("SELECT COUNT(id) from users")
+    console.log(data3.rows[0].count)
+    return data3.rows[0].count
+}
+
+async function maxAge() {
+    var data4 = await pool.query("Select name from users where age = (select max(age) from users)")
+    console.log(data4.rows[0].name)
+    return data4.rows[0].name
+}
+
+async function minAge() {
+    var data5 = await pool.query("Select name from users where age = (select min(age) from users)")
+    console.log(data5.rows[0].name)
+    return data5.rows[0].name
+}
+
 async function asyncCall() {
     console.log('calling');
     const select2 = await User();
     const select = await selectUserID();
+    const select3 = await userCount();
+    const select4 = await maxAge();
+    const select5 = await minAge();
     console.log(select2)
     console.log(select)
+    console.log(select3)
+    console.log(select4)
+    console.log(select5)
 
 
     var userDetail = {
@@ -129,35 +153,19 @@ async function asyncCall() {
         email: this.email
     }
 
-    // var user2 = {
-    //     name: this.name,
-    //     initials: this.initials,
-    //     id: this.id,
-    //     eyeColor: this.eyecolor,
-    //     age: this.age,
-    //     guid: this.guid,
-    //     email: this.email
-    // }
 
     if (details.length > 0) {
         details = []
     }
 
-    // if (list.length > 0) {
-    //     list = []
-    // }
     var data = {}
     data.table = []
     data.table.push(userDetail)
     details.push(userDetail)
 
-    // var data2 = {}
-    // data2.table = []
-    // data2.table.push(user2)
-    // list.push(user2)
 
     console.log(details)
-    // console.log(list)
+
 
 }
 
@@ -167,51 +175,6 @@ router.get('/details', function (req, res) {
     res.send(details)
 })
 
-// router.get('/users2', function (req, res) {
-//     console.log(list)
-//     res.send(list)
-// })
-
-
-// //user.html
-// async function User() {
-//     var data = await pool.query("SELECT id, name, initials, eyeColor, age, guid, email FROM users ORDER BY id ASC LIMIT 10")
-//     console.log(data.rows)
-//     return data.rows
-// }
-
-// async function asyncCall2() {
-//     console.log('calling');
-//     const select = await User();
-//     console.log(select)
-
-//     var user = {
-//         name: name,
-//         initials: initials,
-//         id: id,
-//         eyeColor: eyecolor,
-//         age: age,
-//         guid: guid,
-//         email: email
-//     }
-
-//     if (list.length > 0) {
-//         list = []
-//     }
-
-//     var data = {}
-//     data.table = []
-//     data.table.push(user)
-//     list.push(user)
-
-//     console.log(list)
-
-// }
-
-// router.get('/user', function (req, res) {
-//     console.log(list)
-//     res.send(list)
-// })
 
 
 
@@ -225,16 +188,16 @@ router.get('/user', async (req, res) => {
 
         console.log("queryUser " + queryUser)
 
-            if (list.length > 0) {
-                list = []
-            }
+        if (list.length > 0) {
+            list = []
+        }
 
-            for (let i = 0; i < queryUser.length; i++) {
-                // console.log("ID of this user is " + res.rows[i].id + " and name of this user is " + res.rows[i].name)
-                list.push(queryUser)
-                //  resolve(res.rows);
-            }
-    
+        for (let i = 0; i < queryUser.length; i++) {
+            // console.log("ID of this user is " + res.rows[i].id + " and name of this user is " + res.rows[i].name)
+            list.push(queryUser)
+            //  resolve(res.rows);
+        }
+
 
         console.log("Izvršen je select nad bazom")
         // await asyncCall()
@@ -400,9 +363,11 @@ router.get('/change/id/:id/name/:name/initials/:initials/eyeColor/:eyeColor/age/
 
 })
 
-var nameList
 
-router.get('/minage', function (req, res) {
+
+router.get('/minage', async (req, res) => {
+
+    let nameList
 
     res.header("Access-Control-Allow-Origin", "*");
     //select name from users where age = (select min(age) from users)
@@ -410,22 +375,18 @@ router.get('/minage', function (req, res) {
 
     try {
 
-        pool.query("Select name from users where age = (select min(age) from users)", (err, res) => {
-            console.log(err, res)
-            if (err) {
-                console.log(err)
-
-            }
 
 
-            else {
-                console.log("Younger user selected!")
-                console.log(res.rows[0].name)
-                nameList = res.rows[0].name
-                return nameList;
-            }
+        nameList = await minAge()
 
-        })
+        console.log("nameList " + nameList)
+
+        console.log("Younger user selected!")
+        console.log(nameList)
+        return nameList;
+
+
+
 
     } catch (error) {
         console.log(error)
@@ -437,32 +398,30 @@ router.get('/minage', function (req, res) {
 })
 
 
-var maxNameList
 
-router.get('/maxage', function (req, res) {
+
+router.get('/maxage', async (req, res) => {
 
     res.header("Access-Control-Allow-Origin", "*");
-    //select name from users where age = (select min(age) from users)
+
+
+    let maxNameList
 
 
     try {
 
-        pool.query("Select name from users where age = (select max(age) from users)", (err, res) => {
-            console.log(err, res)
-            if (err) {
-                console.log(err)
 
-            }
+        maxNameList = await maxAge()
+
+        console.log("maxNameList " + maxNameList)
 
 
-            else {
-                console.log("Oldest user selected!")
-                console.log(res.rows[0].name)
-                maxNameList = res.rows[0].name
-                return maxNameList;
-            }
+        console.log("Oldest user selected!")
+        console.log(maxNameList)
+        return maxNameList;
 
-        })
+
+
 
     } catch (error) {
         console.log(error)
@@ -475,6 +434,32 @@ router.get('/maxage', function (req, res) {
 
 
 
+router.get('/userCount', async (req, res) => {
+
+    let countUserList
+
+    res.header("Access-Control-Allow-Origin", "*");
+
+    try {
+
+        countUserList = await userCount()
+
+        console.log("countUserList " + countUserList)
+
+        console.log("Users counted!")
+        console.log(countUserList)
+        //countUserList = res.rows[0].count
+        return countUserList;
+
+
+    } catch (error) {
+        console.log(error)
+    }
+    finally {
+        res.send(countUserList)
+    }
+
+})
 
 
 

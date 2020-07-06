@@ -42,6 +42,10 @@ app.config(function ($routeProvider) {
         //     templateUrl: "test.html",
         //     controller: "formCtrl4"
         // })
+        .when("/statistic", {
+            templateUrl: "statistic.html",
+            controller: "getStatistic"
+        })
         .when("/deleteUser", {
             templateUrl: "deleteUser.html",
             controller: "DeleteUserID"
@@ -54,8 +58,27 @@ app.controller('Main', function ($scope) {
 
 })
 
-//this is for idex.html
-app.controller('showhidectrl', function ($scope) {
+//this is for index.html
+app.controller('showhidectrl', function ($scope, $http) {
+
+    $http({
+        method: 'GET',
+        url: 'http://localhost:3000/userCount'
+    }).then(function successCallback(response) {
+        console.log("It's ok")
+        console.log(response)
+        var data = response.data;
+
+        console.log(data)
+
+        $scope.users = data
+
+
+
+    }).catch(function errorCallback(response) {
+        console.log("It's not ok")
+
+    });
 
 
     $scope.hideval = false;
@@ -382,7 +405,7 @@ app.controller('User', function ($scope, $http) {
 
 })
 
-app.controller('formCtrl3', function ($scope, $http, $location) {
+app.controller('formCtrl3', function ($scope, $http) {
 
     // $scope.edit = 'http://localhost:5000/editUserID'
 
@@ -632,7 +655,7 @@ app.controller('formCtrl3', function ($scope, $http, $location) {
 
     }),
 
-    app.controller('formCtrl5', function ($scope, $location) {
+    app.controller('formCtrl5', function ($scope, $http, $location) {
 
         $scope.submit = function () {
 
@@ -640,6 +663,88 @@ app.controller('formCtrl3', function ($scope, $http, $location) {
 
 
         }
+
+        $http({
+            method: 'GET',
+            url: 'http://localhost:3000/userCount'
+        }).then(function successCallback(response) {
+            console.log("It's ok")
+            console.log(response)
+            var data = response.data;
+
+            console.log(data)
+
+            $scope.users = data
+
+
+
+        }).catch(function errorCallback(response) {
+            console.log("It's not ok")
+
+        });
+
+    }),
+
+    app.controller('getStatistic', function ($scope, $http) {
+
+
+        $http({
+            method: 'GET',
+            url: 'http://localhost:3000/minage'
+        }).then(function successCallback(response) {
+            console.log("It's ok")
+            console.log(response)
+            var data = response.data;
+
+            console.log(data)
+
+            $scope.name1 = data
+
+
+
+        }).catch(function errorCallback(response) {
+            console.log("It's not ok")
+
+        });
+
+
+        $http({
+            method: 'GET',
+            url: 'http://localhost:3000/maxage'
+        }).then(function successCallback(response) {
+            console.log("It's ok")
+            console.log(response)
+            var data = response.data;
+
+            console.log(data)
+
+            $scope.name2 = data
+
+
+
+        }).catch(function errorCallback(response) {
+            console.log("It's not ok")
+
+        });
+
+        $http({
+            method: 'GET',
+            url: 'http://localhost:3000/userCount'
+        }).then(function successCallback(response) {
+            console.log("It's ok")
+            console.log(response)
+            var data = response.data;
+
+            console.log(data)
+
+            $scope.users = data
+
+        }).catch(function errorCallback(response) {
+            console.log("It's not ok")
+
+        });
+
+
 
     })
 
