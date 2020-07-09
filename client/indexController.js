@@ -6,6 +6,10 @@ app.config(function ($routeProvider) {
             templateUrl: "main.html",
             controller: "Main"
         })
+        .when("/login", {
+            templateUrl: "login.html",
+            controller: "Login"
+        })
         .when("/user", {
             templateUrl: "user.html",
             controller: "User"
@@ -53,8 +57,52 @@ app.config(function ($routeProvider) {
 
 });
 
+
+
 app.controller('Main', function ($scope) {
 
+
+})
+
+app.controller('Login', function ($scope, $http, $location) {
+
+    $scope.username = '';
+    $scope.password = '';
+
+    $scope.login = []
+
+    $scope.submit = function () {
+        $scope.login.push(this.username)
+        $scope.login.push(this.password)
+
+       
+        var data = {
+            username: this.username,
+            password: this.password
+        }
+
+        $location.path('/main')
+    
+    
+        $http({
+            method: 'POST',
+            url: 'http://localhost:3000/users/login',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data
+        }).then(function successCallback(response) {
+
+            // console.log("It's ok")
+            // this callback will be called asynchronously
+            // when the response is available
+        }).catch(function errorCallback(response) {
+            //  console.log("It's not ok")
+            // called asynchronously if an error occurs
+            // or server returns response with an error status.
+        });
+
+    }
 
 })
 
