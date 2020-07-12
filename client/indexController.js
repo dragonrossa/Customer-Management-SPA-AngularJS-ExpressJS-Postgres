@@ -81,7 +81,7 @@ app.controller('Login', function ($scope, $http, $location) {
             password: this.password
         }
 
-        $location.path('/main')
+        
     
     
         $http({
@@ -93,11 +93,22 @@ app.controller('Login', function ($scope, $http, $location) {
             data
         }).then(function successCallback(response) {
 
-            // console.log("It's ok")
+             console.log("It's ok")
+
+             console.log(response.data)
+
+             if(response.data==true){
+                $location.path('/main')
+                console.log("True")
+             }
+             else{
+                console.log("False")
+                alert("This user od password does not exists. Please, try again.")
+             }
             // this callback will be called asynchronously
             // when the response is available
         }).catch(function errorCallback(response) {
-            //  console.log("It's not ok")
+              console.log("It's not ok")
             // called asynchronously if an error occurs
             // or server returns response with an error status.
         });

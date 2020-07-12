@@ -69,6 +69,12 @@ async function deleteUser(name) {
     return data.rows[0]
 }
 
+
+async function checkLogin(username, password) {
+    var data = await pool.query("select exists(select 1 from login where username=$1 AND password=$2)", [username, password])
+    return data.rows[0].exists
+}
+
 async function asyncCall() {
     console.log('calling');
     const select2 = await User();
@@ -79,6 +85,7 @@ async function asyncCall() {
     const select6 = await insertUser();
     const select7 = await updateUser();
     const select8 = await deleteUser();
+    const select9 = await checkLogin();
     console.log(select2)
     console.log(select)
     console.log(select3)
@@ -87,6 +94,7 @@ async function asyncCall() {
     console.log(select6)
     console.log(select7)
     console.log(select8)
+    console.log(select9)
 
 
     var userDetail = {
@@ -356,16 +364,21 @@ router.get('/userCount', async (req, res) => {
 
 router.post('/users/login', jsonParser, async (req, res) => {
 
+    let checkUser
+    const username = req.body.username;
+    const password = req.body.password;
     res.header("Access-Control-Allow-Origin", "*");
 
     try {
+        checkUser = await checkLogin(username, password);
+        console.log("checkUser " + checkUser)
         console.log(req.body)
         console.log("yup")
     } catch (error) {
         console.log(error)
     }
     finally {
-        res.send(req.body)
+        res.send(checkUser)
     }
 
 })
