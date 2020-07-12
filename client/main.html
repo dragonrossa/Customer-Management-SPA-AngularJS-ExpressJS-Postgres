@@ -15,26 +15,44 @@
 
 <body ng-app="myApp" ng-style="myStyle">
 
-
     <div ng-controller="Main">
+
+
         <div class="main">
 
             <!-- <h1>{{text}}</h1> -->
 
             <div>
-                <h1>Welcome!</h1>
+
+                <h1>Navigation</h1>
+                
+
+                <!-- <h1>Welcome!</h1>
                 <p></p>
-                <p>This is Users Single Page Application.</p>
-                <p>Here you can write new users or review existing ones. </p>
+                <p>This is Users Single Page Application.</p> -->
+                <!-- <p>Here you can write new users or review existing ones. </p>
                 <p>Delete or update users in the list.</p>
-                <p>There is also list with all the users.</p>
-                <p>Created by <b>Rosana</b></p>
-                <img ng-src="./img/people.jpeg" class="people"></img>
+                <p>There is also list with all the users.</p> -->
+                <!-- <p>Created by <b>Rosana</b></p> -->
+                <img ng-src="./img/people_4.jpeg" class="people_4"></img>
+                <h3>What do you want to do?</h3>
+                <!-- <a href="#!main" ng-click="isShowHide('hide')">About</a> -->
+                <p><a href="#!user" ng-click="isShowHide('hide')">Users list</a></p>
+                <p><a href="#!usersForm" ng-click="isShowHide('hide')">New user</a></p>
+                <p><a href="#!editUser" ng-click="isShowHide('hide')">Edit user</a></p>
+                <p><a href="#!deleteUser" ng-click="isShowHide('hide')">Delete user</a></p>
+                <p><a href="#!statistic" ng-click="isShowHide('hide')">Statistic</a></p>
+                <p><a href="#!logout" ng-click="isShowHide('hide')">Log out</a></p>
+               
             </div>
+
 
         </div>
 
 
+  
+
+        
     </div>
 
 </body>
