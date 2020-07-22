@@ -10,6 +10,10 @@ app.config(function ($routeProvider) {
             templateUrl: "login.html",
             controller: "Login"
         })
+        .when("/createLogin", {
+            templateUrl: "createLogin.html",
+            controller: "createLogin"
+        })
         .when("/user", {
             templateUrl: "user.html",
             controller: "User"
@@ -103,8 +107,64 @@ app.controller('Login', function ($scope, $http, $location) {
              }
              else{
                 console.log("False")
-                alert("This user od password does not exists. Please, try again.")
+                alert("This users password does not exists. Please, try again.")
              }
+            // this callback will be called asynchronously
+            // when the response is available
+        }).catch(function errorCallback(response) {
+              console.log("It's not ok")
+            // called asynchronously if an error occurs
+            // or server returns response with an error status.
+        });
+
+    }
+
+})
+
+
+app.controller('createLogin', function ($scope, $http, $location) {
+
+    $scope.username = '';
+    $scope.password = '';
+
+    $scope.login = []
+
+    $scope.submit = function () {
+        $scope.login.push(this.username)
+        $scope.login.push(this.password)
+
+       
+        var data = {
+            username: this.username,
+            password: this.password
+        }
+
+        
+    
+    
+        $http({
+            method: 'POST',
+            url: 'http://localhost:3000/createLogin',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data
+        }).then(function successCallback(response) {
+
+             console.log("It's ok")
+
+             console.log(response.data)
+             alert("New user created!")
+             $location.path('/main')
+
+            //  if(response.data==true){
+            //     $location.path('/main')
+            //     console.log("True")
+            //  }
+            //  else{
+            //     console.log("False")
+            //     alert("This user od password does not exists. Please, try again.")
+            //  }
             // this callback will be called asynchronously
             // when the response is available
         }).catch(function errorCallback(response) {
@@ -119,6 +179,63 @@ app.controller('Login', function ($scope, $http, $location) {
 
 //this is for index.html
 app.controller('showhidectrl', function ($scope, $http) {
+
+    $http({
+        method: 'GET',
+        url: 'http://localhost:3000/getTime'
+    }).then(function successCallback(response) {
+        console.log("It's ok")
+        console.log(response)
+        var data = response.data;
+
+        console.log(data)
+
+        $scope.time = data
+
+
+
+    }).catch(function errorCallback(response) {
+        console.log("It's not ok")
+
+    });
+
+    $http({
+        method: 'GET',
+        url: 'http://localhost:3000/getDate'
+    }).then(function successCallback(response) {
+        console.log("It's ok")
+        console.log(response)
+        var data = response.data;
+
+        console.log(data)
+
+        $scope.date = data
+
+
+
+    }).catch(function errorCallback(response) {
+        console.log("It's not ok")
+
+    });
+
+    $http({
+        method: 'GET',
+        url: 'http://localhost:3000/loginCount'
+    }).then(function successCallback(response) {
+        console.log("It's ok")
+        console.log(response)
+        var data = response.data;
+
+        console.log(data)
+
+        $scope.logins = data
+
+
+
+    }).catch(function errorCallback(response) {
+        console.log("It's not ok")
+
+    });
 
     $http({
         method: 'GET',
@@ -138,6 +255,9 @@ app.controller('showhidectrl', function ($scope, $http) {
         console.log("It's not ok")
 
     });
+
+   
+
 
 
     $scope.hideval = false;

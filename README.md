@@ -14,6 +14,8 @@ List users
 Update users
 Delete users
 Statistics
+Create logins
+Login with your user
 
 Users counter on left
 

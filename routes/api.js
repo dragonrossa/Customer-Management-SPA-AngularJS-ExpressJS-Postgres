@@ -3,6 +3,7 @@ var express = require('express');
 var router = express.Router();
 const fs = require('fs');
 path = require('path')
+var bcrypt = require('bcryptjs')
 var bodyParser = require('body-parser')
 var jsonParser = bodyParser.json()
 var cors = require('cors')
@@ -34,10 +35,28 @@ async function User() {
     return data2.rows
 }
 
+async function getTime() {
+    var data = await pool.query("SELECT TO_CHAR(NOW(),'HH24:MI') as Time;")
+    console.log(data.rows[0].time)
+    return data.rows[0].time
+}
+
+async function getDate() {
+    var data = await pool.query("SELECT TO_CHAR(NOW(), 'Mon YYYY') as Date;")
+    console.log(data.rows[0].date)
+    return data.rows[0].date
+}
+
 async function userCount() {
     var data3 = await pool.query("SELECT COUNT(id) from users")
     // console.log(data3.rows[0].count)
     return data3.rows[0].count
+}
+
+async function loginCount() {
+    var data7 = await pool.query("SELECT COUNT(id) from login")
+    console.log(data7.rows[0].count)
+    return data7.rows[0].count
 }
 
 async function maxAge() {
@@ -70,22 +89,70 @@ async function deleteUser(name) {
 }
 
 
+
+
 async function checkLogin(username, password) {
-    var data = await pool.query("select exists(select 1 from login where username=$1 AND password=$2)", [username, password])
-    return data.rows[0].exists
+
+    var data1 = await pool.query("SELECT password from login where username=$1", [username]).then((res) => {
+
+        console.log(res.rows[0].password)
+        hash = res.rows[0].password
+        console.log(hash)
+
+        var check = bcrypt.compareSync(password, hash);
+
+        // if (check === true) {
+        //     console.log("its true")
+        // }
+        // else {
+        //     console.log("its false")
+        // }
+
+        return check
+    })
+    return data1
+
 }
+
+
+//CREATE LOGIN
+
+
+async function createLogin(username, password) {
+
+
+    var data1 = await bcrypt.genSalt(10, function (err, salt) {
+        bcrypt.hash(password, salt, function (err, hash) {
+
+            var data = pool.query("INSERT INTO login(username,password) VALUES ($1,$2)", [username, hash])
+            return data.rows
+
+        });
+    });
+    return data1
+
+
+}
+
+
+
 
 async function asyncCall() {
     console.log('calling');
     const select2 = await User();
     const select = await selectUserID();
     const select3 = await userCount();
+    const select11 = await loginCount();
+    const select13 = await getTime();
+    const select12 = await getDate();
     const select4 = await maxAge();
     const select5 = await minAge();
     const select6 = await insertUser();
     const select7 = await updateUser();
     const select8 = await deleteUser();
     const select9 = await checkLogin();
+    const select10 = await createLogin();
+
     console.log(select2)
     console.log(select)
     console.log(select3)
@@ -95,6 +162,10 @@ async function asyncCall() {
     console.log(select7)
     console.log(select8)
     console.log(select9)
+    console.log(select10)
+    console.log(select11)
+    console.log(select12)
+    console.log(select13)
 
 
     var userDetail = {
@@ -339,6 +410,69 @@ router.get('/maxage', async (req, res) => {
 
 })
 
+router.get('/getTime', async (req, res) => {
+
+    let countUsersWithLogin
+    res.header("Access-Control-Allow-Origin", "*");
+    try {
+
+        countUsersWithLogin = await getTime()
+        console.log("countUsersWithLogin " + countUsersWithLogin)
+        console.log("Time counted!")
+        console.log(countUsersWithLogin)
+        return countUsersWithLogin;
+
+    } catch (error) {
+        console.log(error)
+    }
+    finally {
+        res.send(countUsersWithLogin)
+    }
+
+})
+
+router.get('/getDate', async (req, res) => {
+
+    let countUsersWithLogin
+    res.header("Access-Control-Allow-Origin", "*");
+    try {
+
+        countUsersWithLogin = await getDate()
+        console.log("countUsersWithLogin " + countUsersWithLogin)
+        console.log("Date counted!")
+        console.log(countUsersWithLogin)
+        return countUsersWithLogin;
+
+    } catch (error) {
+        console.log(error)
+    }
+    finally {
+        res.send(countUsersWithLogin)
+    }
+
+})
+
+router.get('/loginCount', async (req, res) => {
+
+    let countUsersWithLogin
+    res.header("Access-Control-Allow-Origin", "*");
+    try {
+
+        countUsersWithLogin = await loginCount()
+        console.log("countUsersWithLogin " + countUsersWithLogin)
+        console.log("Users with login counted!")
+        console.log(countUsersWithLogin)
+        return countUsersWithLogin;
+
+    } catch (error) {
+        console.log(error)
+    }
+    finally {
+        res.send(countUsersWithLogin)
+    }
+
+})
+
 
 
 router.get('/userCount', async (req, res) => {
@@ -349,7 +483,7 @@ router.get('/userCount', async (req, res) => {
 
         countUserList = await userCount()
         console.log("countUserList " + countUserList)
-        console.log("Users counted!")
+        console.log("Login counted!")
         console.log(countUserList)
         return countUserList;
 
@@ -362,6 +496,27 @@ router.get('/userCount', async (req, res) => {
 
 })
 
+// router.get('/loginCount', async (req, res) => {
+
+//     let countLogin
+//     res.header("Access-Control-Allow-Origin", "*");
+//     try {
+
+//         countUserList = await loginCount()
+//         console.log("countLogin " + countLogin)
+//         console.log("Logins counted!")
+//         console.log(countLogin)
+//         return countLogin;
+
+//     } catch (error) {
+//         console.log(error)
+//     }
+//     finally {
+//         res.send(countLogin)
+//     }
+
+// })
+
 router.post('/users/login', jsonParser, async (req, res) => {
 
     let checkUser
@@ -372,6 +527,12 @@ router.post('/users/login', jsonParser, async (req, res) => {
     try {
         checkUser = await checkLogin(username, password);
         console.log("checkUser " + checkUser)
+        if (checkUser == true) {
+            console.log("checkUser is true");
+        }
+        else {
+            console.log("checkUser is false");
+        }
         console.log(req.body)
         console.log("yup")
     } catch (error) {
@@ -379,6 +540,27 @@ router.post('/users/login', jsonParser, async (req, res) => {
     }
     finally {
         res.send(checkUser)
+    }
+
+})
+
+router.post('/createLogin', jsonParser, async (req, res) => {
+
+    let createUser
+    const username = req.body.username;
+    const password = req.body.password;
+    res.header("Access-Control-Allow-Origin", "*");
+
+    try {
+        checkUser = await createLogin(username, password);
+        console.log("createUser " + createUser)
+        console.log(req.body)
+        console.log("Kreiran novi login")
+    } catch (error) {
+        console.log(error)
+    }
+    finally {
+        res.send(createUser)
     }
 
 })
