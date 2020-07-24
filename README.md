@@ -1,31 +1,32 @@
-# Customer management SPA
-# AngularJS, ExpressJS, Postgres
+# Customer management SPA - AngularJS, ExpressJS, Postgres
 
-How to login to HR SPA:
 
+**How to login to HR SPA:**
+
+```
 Username: test
 
 Password: test1
+```
 
+**Options:**
 
-Options:
+- Create new user
 
-Create new user
+- List users
 
-List users
+- Update users
 
-Update users
+- Delete users
 
-Delete users
+- Statistics
 
-Statistics
+- Create logins
 
-Create logins
+- Login with your user
 
-Login with your user
-
-Users & login counters on left, date & time
+- Users & login counters on left, date & time
 
 Various options coming soon.
 
-Rosana
+`Rosana`
