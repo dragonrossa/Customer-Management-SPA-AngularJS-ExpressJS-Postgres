@@ -8,6 +8,11 @@ var bodyParser = require('body-parser')
 var jsonParser = bodyParser.json()
 var cors = require('cors')
 router.use(cors())
+"use strict";
+const nodemailer = require("nodemailer");
+var moment = require('moment')
+var logger = require('./logger')
+
 
 const pool = new Pool({
     user: 'rosana',
@@ -16,7 +21,6 @@ const pool = new Pool({
     password: 'testing4546.',
     port: 5432
 })
-
 
 var users = []
 var list = []
@@ -31,50 +35,37 @@ async function selectUserID(id) {
 
 async function User() {
     var data2 = await pool.query("SELECT id, name, initials, eyeColor, age, guid, email FROM users ORDER BY id ASC LIMIT 10")
-    // console.log(data2.rows)
+    // logger.info(data2.rows)
     return data2.rows
 }
 
-async function getTime() {
-    var data = await pool.query("SELECT TO_CHAR(NOW(),'HH24:MI') as Time;")
-    console.log(data.rows[0].time)
-    return data.rows[0].time
-}
-
-async function getDate() {
-    var data = await pool.query("SELECT TO_CHAR(NOW(), 'Mon YYYY') as Date;")
-    console.log(data.rows[0].date)
-    return data.rows[0].date
-}
 
 async function userCount() {
     var data3 = await pool.query("SELECT COUNT(id) from users")
-    // console.log(data3.rows[0].count)
     return data3.rows[0].count
 }
 
 async function loginCount() {
     var data7 = await pool.query("SELECT COUNT(id) from login")
-    console.log(data7.rows[0].count)
+    data7Logger = data7.rows[0].count
+    logger.info(data7.rows[0].count)
     return data7.rows[0].count
 }
 
+
 async function maxAge() {
     var data4 = await pool.query("Select name from users where age = (select max(age) from users)")
-    // console.log(data4.rows[0].name)
     return data4.rows[0].name
 }
 
 async function minAge() {
     var data5 = await pool.query("Select name from users where age = (select min(age) from users)")
-    //console.log(data5.rows[0].name)
     return data5.rows[0].name
 }
 
 
-async function insertUser(name, initials, eyeColor, age, guid, email) {
+async function insertUser(name, initials, eyeColor, age, guid, email, sendMail) {
     var data = await pool.query("INSERT INTO users(name, initials, eyeColor, age, guid, email) VALUES($1, $2, $3, $4, $5, $6)", [name, initials, eyeColor, age, guid, email])
-    // console.log(data.rows[0])
     return data.rows[0]
 }
 
@@ -95,18 +86,11 @@ async function checkLogin(username, password) {
 
     var data1 = await pool.query("SELECT password from login where username=$1", [username]).then((res) => {
 
-        console.log(res.rows[0].password)
+        logger.info(res.rows[0].password)
         hash = res.rows[0].password
-        console.log(hash)
+        logger.info(hash)
 
         var check = bcrypt.compareSync(password, hash);
-
-        // if (check === true) {
-        //     console.log("its true")
-        // }
-        // else {
-        //     console.log("its false")
-        // }
 
         return check
     })
@@ -118,7 +102,7 @@ async function checkLogin(username, password) {
 //CREATE LOGIN
 
 
-async function createLogin(username, password) {
+async function createLogin(username, password, sendMail) {
 
 
     var data1 = await bcrypt.genSalt(10, function (err, salt) {
@@ -138,13 +122,13 @@ async function createLogin(username, password) {
 
 
 async function asyncCall() {
-    console.log('calling');
+    logger.info('calling');
     const select2 = await User();
     const select = await selectUserID();
     const select3 = await userCount();
     const select11 = await loginCount();
-    const select13 = await getTime();
-    const select12 = await getDate();
+    // const select13 = await getTime();
+    //const select12 = await getDate();
     const select4 = await maxAge();
     const select5 = await minAge();
     const select6 = await insertUser();
@@ -153,19 +137,19 @@ async function asyncCall() {
     const select9 = await checkLogin();
     const select10 = await createLogin();
 
-    console.log(select2)
-    console.log(select)
-    console.log(select3)
-    console.log(select4)
-    console.log(select5)
-    console.log(select6)
-    console.log(select7)
-    console.log(select8)
-    console.log(select9)
-    console.log(select10)
-    console.log(select11)
-    console.log(select12)
-    console.log(select13)
+    logger.info(select2)
+    logger.info(select)
+    logger.info(select3)
+    logger.info(select4)
+    logger.info(select5)
+    logger.info(select6)
+    logger.info(select7)
+    logger.info(select8)
+    logger.info(select9)
+    logger.info(select10)
+    logger.info(select11)
+    //logger.info(select12)
+    //logger.info(select13)
 
 
     var userDetail = {
@@ -187,13 +171,13 @@ async function asyncCall() {
     data.table = []
     data.table.push(userDetail)
     details.push(userDetail)
-    console.log(details)
+    logger.info(details)
 
 
 }
 
 router.get('/name/:name/initials/:initials/eyeColor/:eyeColor/age/:age/guid/:guid/email/:email', function (req, res) {
-    console.log(req.params.name, req.params.initials, req.params.eyeColor, req.params.age)
+    logger.info(req.params.name, req.params.initials, req.params.eyeColor, req.params.age)
     if (users.length > 0) {
         users = []
     }
@@ -205,7 +189,7 @@ router.get('/name/:name/initials/:initials/eyeColor/:eyeColor/age/:age/guid/:gui
 
 
 router.get('/name/:name/', async (req, res) => {
-    console.log(req.params.name)
+    logger.info(req.params.name)
 
     let name = req.params.name
     let deletedUser
@@ -217,15 +201,15 @@ router.get('/name/:name/', async (req, res) => {
 
     try {
         deletedUser = await deleteUser(name)
-        console.log("deletedUser" + deletedUser)
+        logger.info("deletedUser" + deletedUser)
 
 
     }
     catch (error) {
-        console.log(error)
+        logger.info(error)
     }
     finally {
-        console.log("User deleted")
+        logger.info("User deleted")
     }
 
     res.send(deletedUser)
@@ -234,8 +218,8 @@ router.get('/name/:name/', async (req, res) => {
 
 router.get('/id/:id/', async (req, res) => {
 
-    console.log("Usli smo!")
-    console.log(req.params.id)
+    logger.info("Usli smo!")
+    logger.info(req.params.id)
 
     let id = req.params.id
     let selectedUser
@@ -243,13 +227,13 @@ router.get('/id/:id/', async (req, res) => {
     try {
         selectedUser = await selectUserID(id)
 
-        console.log("selectedUser " + selectedUser)
+        logger.info("selectedUser " + selectedUser)
 
     } catch (error) {
-        console.log(error)
+        logger.info(error)
     }
     finally {
-        console.log("Inserted new user in database...")
+        logger.info("Inserted new user in database...")
     }
 
     res.send(selectedUser)
@@ -259,7 +243,7 @@ router.get('/id/:id/', async (req, res) => {
 
 
 router.get('/details', function (req, res) {
-    console.log(details)
+    logger.info(details)
     res.send(details)
 })
 
@@ -273,7 +257,7 @@ router.get('/user', async (req, res) => {
 
         queryUser = await User()
 
-        //console.log("queryUser " + queryUser)
+        //logger.info("queryUser " + queryUser)
 
         if (list.length > 0) {
             list = []
@@ -285,13 +269,13 @@ router.get('/user', async (req, res) => {
 
         }
 
-        console.log("Izvršen je select nad bazom")
+        logger.info("Izvršen je select nad bazom")
 
     } catch (error) {
-        console.log(error)
+        logger.info(error)
     }
     finally {
-        console.log("Podaci poslani na front!")
+        logger.info("Podaci poslani na front!")
     }
 
     res.send(list)
@@ -311,19 +295,78 @@ router.post('/users/new/post', jsonParser, async (req, res) => {
     const age = req.body.age;
     const guid = req.body.guid;
     const email = req.body.email;
+    const sendMail = req.body.sendMail;
+
+    logger.info(req.body);
 
     let selectedUserForUpdate
 
     try {
-        selectedUserForUpdate = await insertUser(name, initials, eyeColor, age, guid, email)
+        selectedUserForUpdate = await insertUser(name, initials, eyeColor, age, guid, email, sendMail)
 
-        console.log("selectedUserForUpdate " + selectedUserForUpdate)
+        if (sendMail === true) {
+            logger.info("Šaljemo mail")
+
+
+            async function main() {
+                // Generate test SMTP service account from ethereal.email
+                // Only needed if you don't have a real mail account for testing
+                let testAccount = await nodemailer.createTestAccount();
+
+                mail = "ccap41367@gmail.com"
+                password = "R!x2nQ@2F"
+
+                // create reusable transporter object using the default SMTP transport
+                let transporter = nodemailer.createTransport({
+                    host: "smtp.gmail.com",
+                    //"smtp.ethereal.email",
+                    port: 465,
+                    secure: true, // true for 465, false for other ports
+                    auth: {
+                        user: "ccap41367@gmail.com",
+                        //testAccount.user, // generated ethereal user
+                        pass: "R!x2nQ@2F"
+                        //testAccount.pass, // generated ethereal password
+                    },
+                });
+
+                // send mail with defined transport object
+                let info = await transporter.sendMail({
+                    from: mail,
+                    //'"Fred Foo 👻" <foo@example.com>', // sender address
+                    to: email,
+                    //"bar@example.com, baz@example.com", // list of receivers
+                    subject: "User registration", // Subject line
+                    text: "Your user has been created.<br> Best regards, Admin", // plain text body
+                    html: "Your user has been created.<br> Best regards, Admin", // html body
+                });
+
+                logger.info("Message sent: %s", info.messageId);
+
+                // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
+
+                // Preview only available when sending through an Ethereal account
+                logger.info("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+                // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
+
+
+            }
+
+
+            main().catch(console.error);
+
+        }
+        else {
+            logger.info("Ne šaljemo mail")
+        }
+
+        logger.info("selectedUserForUpdate " + selectedUserForUpdate)
 
     } catch (error) {
-        console.log(error)
+        logger.info(error)
     }
     finally {
-        console.log("Inserted new user in database...")
+        logger.info("Inserted new user in database...")
     }
 
     res.send(req.body)
@@ -334,7 +377,7 @@ router.post('/users/new/post', jsonParser, async (req, res) => {
 
 router.get('/change/id/:id/name/:name/initials/:initials/eyeColor/:eyeColor/age/:age/guid/:guid/email/:email', async (req, res) => {
 
-    console.log(req.params.id, req.params.name, req.params.initials, req.params.eyeColor, req.params.age, req.params.guid, req.params.email)
+    logger.info(req.params.id, req.params.name, req.params.initials, req.params.eyeColor, req.params.age, req.params.guid, req.params.email)
 
     let updatedUser
 
@@ -348,11 +391,11 @@ router.get('/change/id/:id/name/:name/initials/:initials/eyeColor/:eyeColor/age/
 
     try {
         updatedUser = await updateUser(name, initials, eyeColor, age, guid, email, id)
-        console.log("updateUser" + updateUser)
+        logger.info("updateUser" + updateUser)
 
-        console.log("User updated successfully")
+        logger.info("User updated successfully")
     } catch (error) {
-        console.log(error)
+        logger.info(error)
     }
     finally {
 
@@ -371,13 +414,13 @@ router.get('/minage', async (req, res) => {
     try {
 
         nameList = await minAge()
-        console.log("nameList " + nameList)
-        console.log("Younger user selected!")
-        console.log(nameList)
+        logger.info("nameList " + nameList)
+        logger.info("Younger user selected!")
+        logger.info(nameList)
         return nameList;
 
     } catch (error) {
-        console.log(error)
+        logger.info(error)
     }
     finally {
         res.send(nameList)
@@ -396,13 +439,13 @@ router.get('/maxage', async (req, res) => {
     try {
 
         maxNameList = await maxAge()
-        console.log("maxNameList " + maxNameList)
-        console.log("Oldest user selected!")
-        console.log(maxNameList)
+        logger.info("maxNameList " + maxNameList)
+        logger.info("Oldest user selected!")
+        logger.info(maxNameList)
         return maxNameList;
 
     } catch (error) {
-        console.log(error)
+        logger.info(error)
     }
     finally {
         res.send(maxNameList)
@@ -416,14 +459,14 @@ router.get('/getTime', async (req, res) => {
     res.header("Access-Control-Allow-Origin", "*");
     try {
 
-        countUsersWithLogin = await getTime()
-        console.log("countUsersWithLogin " + countUsersWithLogin)
-        console.log("Time counted!")
-        console.log(countUsersWithLogin)
+        countUsersWithLogin = moment().format('h:mm:ss a');
+        logger.info("countUsersWithLogin " + countUsersWithLogin)
+        logger.info("Time counted!")
+        logger.info(countUsersWithLogin)
         return countUsersWithLogin;
 
     } catch (error) {
-        console.log(error)
+        logger.info(error)
     }
     finally {
         res.send(countUsersWithLogin)
@@ -437,14 +480,14 @@ router.get('/getDate', async (req, res) => {
     res.header("Access-Control-Allow-Origin", "*");
     try {
 
-        countUsersWithLogin = await getDate()
-        console.log("countUsersWithLogin " + countUsersWithLogin)
-        console.log("Date counted!")
-        console.log(countUsersWithLogin)
+        countUsersWithLogin = moment().format('MMMM Do YYYY');
+        logger.info("countUsersWithLogin " + countUsersWithLogin)
+        logger.info("Date counted!")
+        logger.info(countUsersWithLogin)
         return countUsersWithLogin;
 
     } catch (error) {
-        console.log(error)
+        logger.info(error)
     }
     finally {
         res.send(countUsersWithLogin)
@@ -459,13 +502,13 @@ router.get('/loginCount', async (req, res) => {
     try {
 
         countUsersWithLogin = await loginCount()
-        console.log("countUsersWithLogin " + countUsersWithLogin)
-        console.log("Users with login counted!")
-        console.log(countUsersWithLogin)
+        logger.info("countUsersWithLogin " + countUsersWithLogin)
+        logger.info("Users with login counted!")
+        logger.info(countUsersWithLogin)
         return countUsersWithLogin;
 
     } catch (error) {
-        console.log(error)
+        logger.info(error)
     }
     finally {
         res.send(countUsersWithLogin)
@@ -482,13 +525,13 @@ router.get('/userCount', async (req, res) => {
     try {
 
         countUserList = await userCount()
-        console.log("countUserList " + countUserList)
-        console.log("Login counted!")
-        console.log(countUserList)
+        logger.info("countUserList " + countUserList)
+        logger.info("Login counted!")
+        logger.info(countUserList)
         return countUserList;
 
     } catch (error) {
-        console.log(error)
+        logger.info(error)
     }
     finally {
         res.send(countUserList)
@@ -496,26 +539,6 @@ router.get('/userCount', async (req, res) => {
 
 })
 
-// router.get('/loginCount', async (req, res) => {
-
-//     let countLogin
-//     res.header("Access-Control-Allow-Origin", "*");
-//     try {
-
-//         countUserList = await loginCount()
-//         console.log("countLogin " + countLogin)
-//         console.log("Logins counted!")
-//         console.log(countLogin)
-//         return countLogin;
-
-//     } catch (error) {
-//         console.log(error)
-//     }
-//     finally {
-//         res.send(countLogin)
-//     }
-
-// })
 
 router.post('/users/login', jsonParser, async (req, res) => {
 
@@ -526,17 +549,17 @@ router.post('/users/login', jsonParser, async (req, res) => {
 
     try {
         checkUser = await checkLogin(username, password);
-        console.log("checkUser " + checkUser)
+        logger.info("checkUser " + checkUser)
         if (checkUser == true) {
-            console.log("checkUser is true");
+            logger.info("checkUser is true");
         }
         else {
-            console.log("checkUser is false");
+            logger.info("checkUser is false");
         }
-        console.log(req.body)
-        console.log("yup")
+        logger.info(req.body)
+        logger.info("yup")
     } catch (error) {
-        console.log(error)
+        logger.info(error)
     }
     finally {
         res.send(checkUser)
@@ -549,19 +572,151 @@ router.post('/createLogin', jsonParser, async (req, res) => {
     let createUser
     const username = req.body.username;
     const password = req.body.password;
+    const sendMail = req.body.sendMail
     res.header("Access-Control-Allow-Origin", "*");
 
     try {
-        checkUser = await createLogin(username, password);
-        console.log("createUser " + createUser)
-        console.log(req.body)
-        console.log("Kreiran novi login")
+        checkUser = await createLogin(username, password, sendMail);
+        logger.info("createUser " + createUser)
+        logger.info(req.body)
+        logger.info("Kreiran novi login")
+
+        if (sendMail === true) {
+            logger.info("Šaljemo mail")
+
+            async function main() {
+                // Generate test SMTP service account from ethereal.email
+                // Only needed if you don't have a real mail account for testing
+                //  let testAccount = await nodemailer.createTestAccount();
+
+                mail = "ccap41367@gmail.com"
+                // passwordTest= "R!x2nQ@2F"
+
+                // create reusable transporter object using the default SMTP transport
+                let transporter = nodemailer.createTransport({
+                    host: "smtp.gmail.com",
+                    //"smtp.ethereal.email",
+                    port: 465,
+                    secure: true, // true for 465, false for other ports
+                    auth: {
+                        user: "ccap41367@gmail.com",
+                        //testAccount.user, // generated ethereal user
+                        pass: "R!x2nQ@2F"
+                        //testAccount.pass, // generated ethereal password
+                    },
+                });
+
+                // send mail with defined transport object
+                let info = await transporter.sendMail({
+                    from: mail,
+                    //'"Fred Foo 👻" <foo@example.com>', // sender address
+                    to: username,
+                    //"bar@example.com, baz@example.com", // list of receivers
+                    subject: "User registration", // Subject line
+                    text: "Your user has been created.<br> Your username is " + username + "<br> Your password is " + password + "<br> Try to login on http://localhost:5000/#!/login<br>Best regards, Admin", // plain text body
+                    html: "Your user has been created.<br> Your username is " + username + "<br> Your password is " + password + "<br> Try to login on http://localhost:5000/#!/login<br>Best regards, Admin" // html body
+                });
+
+                logger.info("Message sent: %s", info.messageId);
+
+                // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
+
+                // Preview only available when sending through an Ethereal account
+                logger.info("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+                // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
+
+
+            }
+
+
+            main().catch(console.error);
+
+
+
+        }
+        else {
+            logger.info("Ne saljemo mail")
+        }
     } catch (error) {
-        console.log(error)
+        logger.info(error)
     }
     finally {
         res.send(createUser)
     }
+
+})
+
+router.post('/sendMail', jsonParser, async (req, res) => {
+
+    //let checkUser
+    const from = req.body.from;
+    const to = req.body.to;
+
+    logger.info("from " + from);
+    logger.info("to " + to);
+
+    res.header("Access-Control-Allow-Origin", "*");
+
+    var sendMail = {
+        from,
+        to
+    }
+
+    module.exports = sendMail
+
+
+    // async..await is not allowed in global scope, must use a wrapper
+    async function main() {
+        // Generate test SMTP service account from ethereal.email
+        // Only needed if you don't have a real mail account for testing
+        let testAccount = await nodemailer.createTestAccount();
+
+        mail = "ccap41367@gmail.com"
+        password = "R!x2nQ@2F"
+
+        // create reusable transporter object using the default SMTP transport
+        let transporter = nodemailer.createTransport({
+            host: "smtp.gmail.com",
+            //"smtp.ethereal.email",
+            port: 465,
+            secure: true, // true for 465, false for other ports
+            auth: {
+                user: "ccap41367@gmail.com",
+                //testAccount.user, // generated ethereal user
+                pass: "R!x2nQ@2F"
+                //testAccount.pass, // generated ethereal password
+            },
+        });
+
+        // send mail with defined transport object
+        let info = await transporter.sendMail({
+            from: from,
+            //'"Fred Foo 👻" <foo@example.com>', // sender address
+            to: to,
+            //"bar@example.com, baz@example.com", // list of receivers
+            subject: "Hello ✔", // Subject line
+            text: "Hello world?", // plain text body
+            html: "<b>Hello world?</b>", // html body
+        });
+
+        logger.info("Message sent: %s", info.messageId);
+
+        // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
+
+        // Preview only available when sending through an Ethereal account
+        logger.info("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+        // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
+
+
+    }
+
+
+    main().catch(console.error);
+
+
+
+
+    res.send(req.body)
 
 })
 

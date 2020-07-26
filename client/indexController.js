@@ -57,6 +57,10 @@ app.config(function ($routeProvider) {
         .when("/deleteUser", {
             templateUrl: "deleteUser.html",
             controller: "DeleteUserID"
+        })
+        .when("/sendMail", {
+            templateUrl: "sendMail.html",
+            controller: "sendMail"
         });
 
 });
@@ -64,7 +68,6 @@ app.config(function ($routeProvider) {
 
 
 app.controller('Main', function ($scope) {
-
 
 })
 
@@ -126,23 +129,27 @@ app.controller('createLogin', function ($scope, $http, $location) {
 
     $scope.username = '';
     $scope.password = '';
+    $scope.sendMail='';
 
     $scope.login = []
 
     $scope.submit = function () {
         $scope.login.push(this.username)
         $scope.login.push(this.password)
+        $scope.login.push(this.sendMail)
 
        
         var data = {
             username: this.username,
-            password: this.password
+            password: this.password,
+            sendMail: this.sendMail
         }
 
         
     
     
         $http({
+
             method: 'POST',
             url: 'http://localhost:3000/createLogin',
             headers: {
@@ -151,29 +158,28 @@ app.controller('createLogin', function ($scope, $http, $location) {
             data
         }).then(function successCallback(response) {
 
+
              console.log("It's ok")
 
              console.log(response.data)
-             alert("New user created!")
+             alert("New login created!")
              $location.path('/main')
 
-            //  if(response.data==true){
-            //     $location.path('/main')
-            //     console.log("True")
-            //  }
-            //  else{
-            //     console.log("False")
-            //     alert("This user od password does not exists. Please, try again.")
-            //  }
-            // this callback will be called asynchronously
-            // when the response is available
         }).catch(function errorCallback(response) {
               console.log("It's not ok")
             // called asynchronously if an error occurs
             // or server returns response with an error status.
         });
 
+       
+
+        
+
     }
+
+    $scope.myStyle7 = {
+        "margin-left": "100px"
+    };
 
 })
 
@@ -292,6 +298,9 @@ app.controller('formCtrl', function ($scope, $http, $location) {
     $scope.age = '';
     $scope.guid = '';
     $scope.email = '';
+    $scope.sendMail = '';
+    //console.log($scope.sendMail)
+
     $scope.users = [];
 
     $scope.myTxt = "Waiting for new user...";
@@ -304,6 +313,8 @@ app.controller('formCtrl', function ($scope, $http, $location) {
             $scope.users.push(this.age);
             $scope.users.push(this.guid);
             $scope.users.push(this.email);
+            $scope.users.push(this.sendMail)
+           // console.log($scope.sendMail)
 
 
             $location.path('/userInserted');
@@ -314,7 +325,8 @@ app.controller('formCtrl', function ($scope, $http, $location) {
                 eyeColor: this.eyeColor,
                 age: this.age,
                 guid: this.guid,
-                email: this.email
+                email: this.email,
+                sendMail: this.sendMail
             }
             // console.log(JSON.stringify(data))
 
@@ -371,7 +383,7 @@ app.controller('formCtrl', function ($scope, $http, $location) {
             $scope.age = '';
             $scope.guid = '';
             $scope.email = '';
-
+            $scope.sendMail = '';
 
 
         }
@@ -405,6 +417,9 @@ app.controller('formCtrl', function ($scope, $http, $location) {
         "margin-left": "60px"
     };
 
+    $scope.myStyle7 = {
+        "margin-left": "115px"
+    };
     $scope.Submit = {
         "margin-left": "0px"
     };
@@ -501,13 +516,7 @@ app.controller('IndexList', ['$scope', '$rootScope', function ($scope, $rootScop
     }
 
 }])
-    .controller('NamesController', ['$scope', function ($scope) {
-        // $scope.names = ['Iphone', 'Kitchen', 'Users']
-        $scope.iphone = ['Iphone']
-        $scope.kitchen = ['Kitchen']
-        $scope.users = ['Users']
-        $scope.test = ['Test']
-    }])
+ 
 
 app.controller('User', function ($scope, $http) {
 
@@ -686,7 +695,7 @@ app.controller('formCtrl3', function ($scope, $http) {
 },
 
 
-    app.controller('formCtrl4', function ($scope, $http, $routeParams, $route, $location) {
+app.controller('formCtrl4', function ($scope, $http, $routeParams, $route, $location) {
 
 
         $scope.testID = $routeParams.id
@@ -763,7 +772,7 @@ app.controller('formCtrl3', function ($scope, $http) {
     }),
 
 
-    app.controller('DeleteUserID', function ($scope, $http, $location) {
+app.controller('DeleteUserID', function ($scope, $http, $location) {
 
         $scope.listID = []
 
@@ -834,7 +843,7 @@ app.controller('formCtrl3', function ($scope, $http) {
 
     }),
 
-    app.controller('formCtrl5', function ($scope, $http, $location) {
+app.controller('formCtrl5', function ($scope, $http, $location) {
 
         $scope.submit = function () {
 
@@ -923,10 +932,71 @@ app.controller('formCtrl3', function ($scope, $http) {
 
         });
 
+        $http({
+            method: 'GET',
+            url: 'http://localhost:3000/loginCount'
+        }).then(function successCallback(response) {
+            console.log("It's ok")
+            console.log(response)
+            var data = response.data;
+
+            console.log(data)
+
+            $scope.logins = data
+
+        }).catch(function errorCallback(response) {
+            console.log("It's not ok")
+
+        });
 
 
+
+
+    }),
+
+app.controller('sendMail', function ($scope, $http, $location) {
+
+        $scope.from = '';
+        $scope.to = '';
+    
+        $scope.login = []
+    
+        $scope.submit = function () {
+            $scope.login.push(this.from)
+            $scope.login.push(this.to)
+    
+           
+            var data = {
+                from: this.from,
+                to: this.to
+            }
+    
+            
+            $http({
+                method: 'POST',
+                url: 'http://localhost:3000/sendMail',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                data
+            }).then(function successCallback(response) {
+    
+                 console.log("It's ok")
+    
+                 console.log(response.data)
+                 alert("Mail successfully sent!")
+                 $location.path('/main')
+    
+               
+            }).catch(function errorCallback(response) {
+                  console.log("It's not ok")
+                // called asynchronously if an error occurs
+                // or server returns response with an error status.
+            });
+    
+        }
+    
     })
-
 
 );
 

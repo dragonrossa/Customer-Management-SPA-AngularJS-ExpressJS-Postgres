@@ -14,7 +14,7 @@
     </style>
 </head>
 
-<body> 
+<body>
 
     <div class="main" ng-app="myApp" ng-controller="formCtrl">
         <h1>List of users</h1>
@@ -23,18 +23,20 @@
         <form ng-submit="submit()" name="userForm">
             <p>Name:
                 <input type="text" ng-model="name" name="name" ng-style="myStyle" /></p>
-          <p>  Initials:
-            <input type="text" ng-model="initials" name="initials" ng-style="myStyle2" /> </p>
+            <p> Initials:
+                <input type="text" ng-model="initials" name="initials" ng-style="myStyle2" /> </p>
             <p>Eye color: <input type="text" ng-model="eyeColor" name="eyeColor" ng-style="myStyle4"></p>
             <p>Age: <input type="number" ng-model="age" name="age" ng-style="myStyle3"></p>
             <p>Guid: <input type="text" ng-model="guid" name="guid" ng-style="myStyle6"></p>
             <p>Mail: <input type="email" ng-model="email" name="email" ng-style="myStyle5"></p>
+            <input type="checkbox" id="sendMail" ng-model="sendMail" name="sendMail" value="Yes" ng-style="myStyle7">
+            <label for="sendMail"> Send mail to user</label><br>
             <input type="submit" id="submit" value="Submit" ng-style="Submit" />
-    
-        
+
+
         </form>
 
-    
+
 
     </div>
 
