@@ -26,7 +26,7 @@ winston.loggers.add('customLogger',{
 
 logger = winston.loggers.get('customLogger');
 //this.logger.log('info', 'this is the example!');
-logger.info('Hello World!');
+// logger.info('Hello World!');
 
 
 module.exports = logger

@@ -69,6 +69,19 @@ app.config(function ($routeProvider) {
 
 app.controller('Main', function ($scope) {
 
+
+ var countries = new Bloodhound({
+     datumTokenizer: Bloodhound.tokenizers.whitespace,
+     queryTokenizer: Bloodhound.tokenizers.whitespace,
+
+     prefetch: 'json/users.json'
+ });
+
+ $('#prefetch .typeahead').typeahead(null, {
+     name: 'countries',
+     source: countries
+ });
+
 })
 
 app.controller('Login', function ($scope, $http, $location) {
@@ -122,6 +135,7 @@ app.controller('Login', function ($scope, $http, $location) {
 
     }
 
+    
 })
 
 
@@ -185,6 +199,8 @@ app.controller('createLogin', function ($scope, $http, $location) {
 
 //this is for index.html
 app.controller('showhidectrl', function ($scope, $http) {
+
+    
 
     $http({
         method: 'GET',
@@ -285,6 +301,8 @@ app.controller('showhidectrl', function ($scope, $http) {
     $scope.myStyle = {
         "padding-left": "20px"
     }
+
+    
 
 }
 
@@ -689,6 +707,19 @@ app.controller('formCtrl3', function ($scope, $http) {
         "padding-bottom": "10px"
     }
 
+    
+
+    var countries = new Bloodhound({
+        datumTokenizer: Bloodhound.tokenizers.whitespace,
+        queryTokenizer: Bloodhound.tokenizers.whitespace,
+    
+        prefetch: 'json/users.json'
+    });
+
+    $('#prefetch .typeahead').typeahead(null, {
+        name: 'countries',
+        source: countries
+    });
 
 
 

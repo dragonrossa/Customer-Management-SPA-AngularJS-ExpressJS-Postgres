@@ -13,7 +13,6 @@ const nodemailer = require("nodemailer");
 var moment = require('moment')
 var logger = require('./logger')
 
-
 const pool = new Pool({
     user: 'rosana',
     host: 'localhost',

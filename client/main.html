@@ -4,11 +4,37 @@
 <head>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-route.js"></script>
-    <link rel="stylesheet" type="text/css" href="sidebar.css">
+    <link rel="stylesheet" type="text/css" href="css/sidebar.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.9.3/typeahead.min.js"></script>
+    <script type="text/javascript" src="script/typeahead.bundle.js"></script>
+    <script type="text/javascript"
+        src="https://rawgithub.com/sgruhier/typeahead-addresspicker/master/dist/typeahead-addresspicker.js"></script>
 
     <style>
         div.main2 {
             display: none;
+        }
+
+
+        * {
+            box-sizing: border-box;
+        }
+
+        /* Create two equal columns that floats next to each other */
+        .column {
+            float: left;
+            width: 50%;
+            height: 75px;
+            /* Should be removed. Only for demonstration */
+        }
+
+        /* Clear floats after the columns */
+        .row:after {
+            content: "";
+            display: table;
+            clear: both;
         }
     </style>
 </head>
@@ -18,25 +44,34 @@
     <div ng-controller="Main">
 
 
+
+
         <div class="main">
 
-            <!-- <h1>{{text}}</h1> -->
+
 
             <div>
 
                 <h1>Navigation</h1>
-                
 
-                <!-- <h1>Welcome!</h1>
-                <p></p>
-                <p>This is Users Single Page Application.</p> -->
-                <!-- <p>Here you can write new users or review existing ones. </p>
-                <p>Delete or update users in the list.</p>
-                <p>There is also list with all the users.</p> -->
-                <!-- <p>Created by <b>Rosana</b></p> -->
                 <img ng-src="./img/people_4.jpeg" class="people_4"></img>
-                <h3>What do you want to do?</h3>
-                <!-- <a href="#!main" ng-click="isShowHide('hide')">About</a> -->
+                
+                <div class="row">
+                    <div class="column" >
+                        <h2>Search user</h2>
+                      
+                    </div>
+                    <div class="column">
+                        <div id="prefetch" style="width: 250px;">
+                    
+                            <input class="typeahead" type="text" placeholder="User">
+                        </div>
+                    </div>
+                  </div>
+
+                
+                  <h3>What do you want to do?</h3>
+
                 <p><a href="#!user" ng-click="isShowHide('hide')">Users list</a></p>
                 <p><a href="#!usersForm" ng-click="isShowHide('hide')">New user</a></p>
                 <p><a href="#!createLogin" ng-click="isShowHide('hide')">New login</a></p>
@@ -44,17 +79,23 @@
                 <p><a href="#!deleteUser" ng-click="isShowHide('hide')">Delete user</a></p>
                 <p><a href="#!statistic" ng-click="isShowHide('hide')">Statistic</a></p>
                 <p><a href="#!logout" ng-click="isShowHide('hide')">Log out</a></p>
-               
+
             </div>
+
+
+
+
 
 
         </div>
 
 
-  
 
-        
+
     </div>
+
+
+<!-- <script src="./js/search.js"></script> -->
 
 </body>
 

@@ -5,11 +5,38 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="sidebar.css">
+    <!-- <link rel="stylesheet" type="text/css" href="css/sidebar.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script> -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-route.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/sidebar.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.9.3/typeahead.min.js"></script>
+    <script type="text/javascript" src="script/typeahead.bundle.js"></script>
+    <script type="text/javascript"
+        src="https://rawgithub.com/sgruhier/typeahead-addresspicker/master/dist/typeahead-addresspicker.js"></script>
     <title>Insert new user</title>
     <style>
         div.main2 {
             display: none;
+        }
+        * {
+            box-sizing: border-box;
+        }
+
+        /* Create two equal columns that floats next to each other */
+        .column {
+            float: left;
+            width: 50%;
+            height: 50px;
+            /* Should be removed. Only for demonstration */
+        }
+
+        /* Clear floats after the columns */
+        .row:after {
+            content: "";
+            display: table;
+            clear: both;
         }
     </style>
 
@@ -19,6 +46,8 @@
 
     <div class="main" ng-app="myApp" ng-controller="formCtrl3">
         <h1>Edit users settings</h1>
+
+        
 
 
 
@@ -36,13 +65,26 @@
                   <td> &nbsp; <a href="#!userDetail/{{id}}" ng-click="myFunc()" ng-model="id" name="id">Edit</a></td>
                 </tr>
               </table>
-           
 
+        </table>
+
+        <div class="row">
+            <div class="column" >
+                <p>Search user</p>
+              
+            </div>
+            <div class="column">
+                <div id="prefetch" style="width: 250px;">
+            
+                    <input class="typeahead" type="text" placeholder="User">
+                </div>
+            </div>
+          </div>
 
 
     </div>
 
-
+   
 
 </body>
 

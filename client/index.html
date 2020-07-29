@@ -1,9 +1,17 @@
 <!DOCTYPE html>
 <html>
-    <head>
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-route.js"></script>
-<link rel="stylesheet" type="text/css" href="sidebar.css">
+
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-route.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/sidebar.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.9.3/typeahead.min.js"></script>
+    <script type="text/javascript" src="script/typeahead.bundle.js"></script>
+    <script type="text/javascript"
+        src="https://rawgithub.com/sgruhier/typeahead-addresspicker/master/dist/typeahead-addresspicker.js"></script>
+    
 
 </head>
 
@@ -23,13 +31,15 @@
             <p>Login: {{logins}}</p>
             <span>Date: {{date}}</span>
             <span>Time: {{time}}</span>
+
            
+
             <img ng-src="./img/girl.png" class="picture"></img>
         </div>
 
-    
 
-    <div class="main2">
+
+        <div class="main2">
             <h1 class="hidden">Users SPA</h1>
             <p><b>Functions:</b></p>
             <p>Create new Users.</p>
@@ -40,15 +50,35 @@
             <p>Now...</p>
             <p><a href="#!login">Login</a> with your user.</p>
 
+            <!-- <div id="prefetch">
+                <input class="typeahead" type="text" placeholder="User">
+            </div> -->
+
             <img ng-src="./img/pencil.png" class="pencil"></img>
-       
+
+        </div>
+
     </div>
 
-</div>
 
+    <!-- <script type="text/javascript">
 
+        var countries = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.whitespace,
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+        
+            prefetch: 'json/users.json'
+        });
+
+        $('#prefetch .typeahead').typeahead(null, {
+            name: 'countries',
+            source: countries
+        });
+   </script> -->
 
     <script src="indexController.js"></script>
+
+   
 </body>
 
 </html>
